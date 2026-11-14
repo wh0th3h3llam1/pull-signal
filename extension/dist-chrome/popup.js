@@ -2,7 +2,7 @@
 (() => {
   // src/common.ts
   var ext = globalThis.browser ?? globalThis.chrome;
-  var DEFAULT_API = "http://localhost:8001";
+  var DEFAULT_API = true ? "https://pullsignal.onrender.com" : "https://pullsignal.onrender.com";
   var DEFAULT_SETTINGS = {
     apiBase: DEFAULT_API,
     sites: { amazon: true, ebay: true, walmart: true, target: true, generic: true },

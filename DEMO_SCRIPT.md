@@ -1,6 +1,6 @@
 # PullSignal — 2-minute SearchHack demo
 
-**Run locally:** `PYTHONPATH=. .venv/Scripts/python -m uvicorn app.main:app --port 8001` → landing `http://localhost:8001/landing.html`, console `http://localhost:8001/`. Extension: load `extension/dist-chrome` (talks to `localhost:8001`).
+**Run locally:** `PYTHONPATH=. .venv/Scripts/python -m uvicorn app.main:app --port 8001` → landing `http://localhost:8001/landing.html`, console `http://localhost:8001/`. Extension: load `extension/dist-chrome` (PullSignal Guard, talks to https://pullsignal.onrender.com) or `extension/dist-chrome-local` (PullSignal Guard Local, talks to `localhost:8001`).
 
 | Time | Show | Say |
 |---|---|---|

@@ -23,6 +23,7 @@
     "storage"
   ],
   "host_permissions": [
+    "https://pullsignal.onrender.com/*",
     "*://*.amazon.com/*",
     "*://*.ebay.com/*",
     "*://*.walmart.com/*",

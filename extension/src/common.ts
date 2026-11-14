@@ -3,7 +3,9 @@ import type { Settings, SiteKey } from './types';
 // One API surface for Firefox (`browser`, promise-based) and Chrome (`chrome`, promise-based in MV3).
 export const ext: typeof chrome = (globalThis as any).browser ?? (globalThis as any).chrome;
 
-export const DEFAULT_API = 'http://localhost:8001';
+declare const __API__: string;
+// Set at build time (scripts/build.mjs): Render for the main build, localhost for the local copy.
+export const DEFAULT_API = typeof __API__ !== 'undefined' ? __API__ : 'https://pullsignal.onrender.com';
 
 export const DEFAULT_SETTINGS: Settings = {
   apiBase: DEFAULT_API,

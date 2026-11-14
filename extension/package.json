@@ -1,8 +1,8 @@
 {
-  "name": "recall-guard",
+  "name": "pullsignal-guard",
   "version": "0.2.0",
   "private": true,
-  "description": "Recall Guard: tags recalled products while you shop (Recall Hunter v2 browser extension)",
+  "description": "PullSignal Guard: tags recalled products while you shop",
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",

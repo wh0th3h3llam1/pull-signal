@@ -23,6 +23,7 @@
     "storage"
   ],
   "host_permissions": [
+    "https://pullsignal.onrender.com/*",
     "*://*.amazon.com/*",
     "*://*.ebay.com/*",
     "*://*.walmart.com/*",
@@ -55,7 +56,7 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "recall-guard@recallhunter.dev",
+      "id": "guard@pullsignal.dev",
       "strict_min_version": "121.0"
     }
   }
