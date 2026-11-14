@@ -1,0 +1,32 @@
+# Render Blueprint: one Docker web service (FastAPI API + built console + landing page).
+# Secrets use sync: false, so Render asks for their values when you create the Blueprint. Never commit them.
+services:
+  - type: web
+    name: pullsignal
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: starter
+    region: oregon
+    branch: main
+    autoDeploy: true
+    healthCheckPath: /api/health
+    envVars:
+      # required
+      - key: TIGER_DATABASE_URL
+        sync: false
+      - key: TELEM_API_KEY
+        sync: false
+      - key: TELEM_BASE_URL
+        value: https://hack.telem.ai/api
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_FORCE_MODEL
+        value: gemini-3.1-flash-lite
+      # optional
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: SENTRY_DSN
+        sync: false

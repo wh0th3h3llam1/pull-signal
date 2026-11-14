@@ -1,4 +1,4 @@
-# Recall Hunter: single container (FastAPI API + built console UI) for DigitalOcean App Platform
+# PullSignal: single container (FastAPI API + built console UI + landing page)
 FROM node:22-slim AS web
 WORKDIR /web
 COPY web/package.json web/package-lock.json ./
