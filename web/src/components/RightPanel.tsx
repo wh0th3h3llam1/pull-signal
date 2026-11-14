@@ -23,8 +23,6 @@ function describe(ev: HuntEvent): { tag: string; text: string; tone?: string } {
       return { tag: 'START', text: `run ${short(d.run_id, 14)} · recall #${d.recall_id ?? '?'}` };
     case 'query':
       return { tag: 'QUERY', text: `${platformLabel(d.platform)} “${short(d.query, 40)}”` };
-    case 'photo_query':
-      return { tag: 'PHOTO', text: `Gemini read recall photo → “${short(((d.queries as string[]) ?? []).join(' · '), 60)}”`, tone: 'amber' };
     case 'telem_route': {
       const prov = (d.providers as string[] | undefined) ?? [];
       return { tag: 'ROUTE', text: `Telem → ${prov.slice(0, 4).join(', ')}${prov.length > 4 ? ` +${prov.length - 4}` : ''} · ${d.results ?? 0} results · ${d.ms ?? '?'}ms`, tone: 'ok' };

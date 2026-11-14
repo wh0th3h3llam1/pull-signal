@@ -82,21 +82,11 @@ async def run_hunt(run_id: str, recall_id: int) -> dict:
 
         # 1. plan
         with obs.span("hunt.plan", "make_queries"):
-            text_q, photo = await asyncio.gather(funnel.make_queries(recall), funnel.photo_queries(recall),
-                                                 return_exceptions=True)
-            if isinstance(text_q, Exception):
-                err("plan", text_q)
-                text_q = [(recall.get("product_name") or recall.get("title") or "")[:60]]
-            pq = [] if isinstance(photo, Exception) else photo.get("queries") or []
-            if isinstance(photo, Exception):
-                err("photo_plan", photo)
-            elif pq:
-                emit("photo_query", {"looks": photo.get("looks"), "queries": pq, "images": photo.get("images"),
-                                     "ms": photo.get("ms")})
-            # photo query goes 3rd so it is inside the Telem hunt's first 3 queries
-            queries = list(dict.fromkeys(text_q[:2] + pq[:1] + text_q[2:] + pq[1:]))
-            stats["photo_queries"] = pq
-            recall["_photo_queries"] = pq
+            try:
+                queries = await funnel.make_queries(recall)
+            except Exception as e:
+                err("plan", e)
+                queries = [(recall.get("product_name") or recall.get("title") or "")[:60]]
         stats["queries"] = queries
 
         # 2. search

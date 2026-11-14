@@ -355,7 +355,7 @@ async def search_all(recall: dict, queries: list[str], emit, platforms: list[str
     platforms = platforms or PLATFORM_ORDER
     deadline = time.time() + WAIT_S
     async with httpx.AsyncClient(timeout=60) as client:
-        res = await asyncio.gather(_telem_hunt(queries, emit, recall.get('_photo_queries') or []),
+        res = await asyncio.gather(_telem_hunt(queries, emit),
                                    *[_platform(client, p, queries, emit, deadline) for p in platforms],
                                    return_exceptions=True)
     out, seen = [], set()
@@ -428,7 +428,6 @@ _LISTING_URL = [
 # marketplace angles; Telem's auto-routing picks the search providers for each one
 _ANGLES = ["{q} for sale", "{q} offerup", "{q} ebay", "{q} mercari", "{q} facebook marketplace"]
 TELEM_MAX_FETCH = int(os.getenv("RH_TELEM_MAX_FETCH", "24"))
-PHOTO_SLOTS = int(os.getenv("RH_PHOTO_SLOTS", "6"))
 
 
 def listing_ref(url: str) -> tuple[str, str] | None:
@@ -457,12 +456,12 @@ def _from_page(plat: str, nid: str, url: str, hit: dict, doc: dict | None, query
         "listing_id": f"{plat}:{nid}", "platform": plat, "url": url, "title": (title or body[:120])[:300],
         "description": body[:4000], "price": _f(pm.group(1)) if pm else None, "currency": "USD", "seller": None,
         "location": lm.group(1) if lm else None, "image_url": im.group(1) if im else None,
-        "raw": {"via": "telem", "_query": query, "search_providers": hit.get("providers"), "via_photo": bool(hit.get("via_photo")),
+        "raw": {"via": "telem", "_query": query, "search_providers": hit.get("providers"),
                 "fetch_provider": (doc or {}).get("provider"), "fetched": bool(doc and doc.get("ok"))},
     }
 
 
-async def _telem_hunt(queries: list[str], emit, photo_qs: list[str] | None = None) -> list[dict]:
+async def _telem_hunt(queries: list[str], emit) -> list[dict]:
     """Live hunt through Telem: marketplace-angled searches (auto-routed) -> listing URLs -> clean page fetch."""
     from .. import telem
     if not telem.enabled() or _cache_only():
@@ -480,7 +479,6 @@ async def _telem_hunt(queries: list[str], emit, photo_qs: list[str] | None = Non
                                  "results": len(r.get("results") or []), "session_id": r.get("session_id")})
             return a, r
 
-    photo_asks = {a.format(q=q) for q in (photo_qs or []) for a in _ANGLES}
     found: dict[str, tuple[str, str, dict, str]] = {}
     raw_hits = 0
     for a, r in await asyncio.gather(*[one(a) for a in asks]):
@@ -494,12 +492,7 @@ async def _telem_hunt(queries: list[str], emit, photo_qs: list[str] | None = Non
                 else:
                     found[lid] = (ref[0], ref[1], dict(hit), a)
     # consensus first: listings that more search providers returned get fetched first
-    ranked = sorted(found.values(), key=lambda t: -len(t[2]["providers"]))
-    # multimodal: reserve a few fetch slots for listings that only the photo-derived (look-based) queries found
-    photo_only = [t for t in ranked if t[3] in photo_asks][:PHOTO_SLOTS]
-    picks = photo_only + [t for t in ranked if t not in photo_only][:TELEM_MAX_FETCH - len(photo_only)]
-    for t in photo_only:
-        t[2]["via_photo"] = True
+    picks = sorted(found.values(), key=lambda t: -len(t[2]["providers"]))[:TELEM_MAX_FETCH]
     docs: dict[str, dict] = {}
     batches = [picks[i:i + 6] for i in range(0, len(picks), 6)]
     for res in await asyncio.gather(*[telem.fetch([p[2]["url"] for p in b], purpose="hunt_listing") for b in batches],
@@ -516,8 +509,7 @@ async def _telem_hunt(queries: list[str], emit, photo_qs: list[str] | None = Non
             out.append(lst)
     eff = {"raw_hits": raw_hits, "unique_listings": len(found),
            "consensus": sum(1 for t in found.values() if len(t[2]["providers"]) >= 2),
-           "fetched": len(picks), "fetches_saved": raw_hits - len(picks), "kept": len(out),
-           "photo_found": sum(1 for t in found.values() if t[3] in photo_asks), "photo_fetched": len(photo_only)}
+           "fetched": len(picks), "fetches_saved": raw_hits - len(picks), "kept": len(out)}
     obs.log_call("telem", "consensus", "hunt", "ok", int((time.perf_counter() - t0) * 1000), len(out), sample=eff)
     emit("source_done", {"platform": "telem", "count": len(out), "status": "ok",
                          "ms": int((time.perf_counter() - t0) * 1000), "searches": len(asks), **eff})
