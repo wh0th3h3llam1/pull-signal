@@ -19,7 +19,7 @@ export interface LiveCounts {
 export type HuntStatus = 'idle' | 'starting' | 'running' | 'done' | 'error';
 
 const ZERO: LiveCounts = { candidates: 0, screened: 0, vision: 0, escalated: 0, confirmed: 0, likely: 0, rejected: 0 };
-const TYPES = ['start', 'query', 'telem_route', 'source_done', 'candidate', 'screened', 'vision', 'escalated', 'verdict', 'evidence', 'done', 'error'];
+const TYPES = ['start', 'query', 'telem_route', 'photo_query', 'source_done', 'candidate', 'screened', 'vision', 'escalated', 'verdict', 'evidence', 'done', 'error'];
 
 export function useHunt(onDone: (recallId: number | null) => void) {
   const [runId, setRunId] = useState<string | null>(null);
