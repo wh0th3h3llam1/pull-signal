@@ -277,6 +277,32 @@ async def make_queries(recall: dict) -> list[str]:
     return qs[:4]
 
 
+class PhotoQueries(BaseModel):
+    looks: str = Field(description="One line: what the product in the recall photo looks like (shape, colour, material, distinctive parts)")
+    queries: list[str] = Field(description="2 short search strings (3-7 words) describing the product BY ITS LOOK, the way a "
+                                           "reseller who doesn't know the brand or model would title the listing")
+
+
+async def photo_queries(recall: dict) -> dict:
+    """Multimodal search planning: Gemini looks at the official recall photo and writes look-based queries.
+    Catches listings that omit the brand/model (common on OfferUp / FB Marketplace)."""
+    imgs = []
+    for u in (recall.get("image_urls") or [])[:2]:
+        img = await fetch_image(u)
+        if img:
+            imgs.append(_part(img))
+    if not imgs:
+        return {"queries": [], "looks": None, "images": 0}
+    contents = ["OFFICIAL RECALL PHOTO(S):", *imgs,
+                "Recalled product: " + str(recall.get("product_name") or recall.get("title") or "")[:200] +
+                ". Describe what it looks like, then write 2 search strings a reseller who does NOT know the brand "
+                "would use to title it (e.g. 'gray baby rocking sleeper bassinet'). No brand names, no quotes."]
+    data, ms = await _gen(M_VISION, "photo_queries", contents, PhotoQueries, records=len(imgs),
+                          sample_extra={"recall_id": recall.get("recall_id")})
+    qs = [q.strip().strip('"') for q in data.get("queries") or [] if q and q.strip()][:2]
+    return {"queries": qs, "looks": (data.get("looks") or "")[:200], "images": len(imgs), "ms": ms}
+
+
 # ---------------------------------------------------------------- triage
 async def _tier1(recall: dict, batch: list[dict]) -> tuple[dict[int, dict], int]:
     lines = [f"[{i}] " + _listing_text(l).replace("\n", " | ") for i, l in enumerate(batch)]
