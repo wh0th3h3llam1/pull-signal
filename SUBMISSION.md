@@ -2,7 +2,7 @@
 
 **Tagline:** Recalled products keep selling online. PullSignal finds them across every marketplace, proves it, and warns shoppers before they buy.
 
-**Tracks:** Search routing · Agentic search (plan → search → verify → synthesize) · Efficient search · Multimodal search · Personalized search
+**Tracks:** Search routing · Agentic search (plan → search → verify → synthesize) · Efficient search
 
 ## The problem
 The U.S. CPSC recalls about 10 products a week: infant sleepers, magnets, French presses that shatter. Only about 6% of consumers act on a recall notice, and the products keep selling on OfferUp, eBay, Mercari, Facebook Marketplace and Amazon. Regulators send takedown requests by hand.
@@ -15,7 +15,7 @@ The U.S. CPSC recalls about 10 products a week: infant sleepers, magnets, French
 
 ## Why it needs Telem
 - One API, many search indexes, one result format: the hunt asks 5–10 angled queries per recall and Telem fans each out to ~7 providers. Building and maintaining that ourselves is weeks of work.
-- **Consensus ranking**: a listing found by several independent engines is fetched first, which cuts wasted page reads.
+- **Consensus ranking (efficient search)**: hits from all engines are merged into unique listings, and listings found by 2+ independent engines are fetched first, with a hard cap on fetches. Each hunt logs raw hits → unique listings → fetched, so fetches saved are measured (shown live as the CONSENSUS line and in `/api/stats` under `telem.efficiency`).
 - **Fetch with failover**: marketplace pages (OfferUp, eBay, Target) come back as clean text, which feeds the verifier directly.
 - **Observability**: every search and fetch is a trace in Telem's console, and each call is also logged with its routing in our Proof drawer.
 

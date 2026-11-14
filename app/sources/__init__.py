@@ -480,7 +480,9 @@ async def _telem_hunt(queries: list[str], emit) -> list[dict]:
             return a, r
 
     found: dict[str, tuple[str, str, dict, str]] = {}
+    raw_hits = 0
     for a, r in await asyncio.gather(*[one(a) for a in asks]):
+        raw_hits += len(r.get("results") or [])
         for hit in r.get("results") or []:
             ref = listing_ref(hit["url"])
             if ref:
@@ -505,8 +507,12 @@ async def _telem_hunt(queries: list[str], emit) -> list[dict]:
         lst = _from_page(plat, nid, hit["url"], hit, doc, q)
         if lst["title"]:
             out.append(lst)
+    eff = {"raw_hits": raw_hits, "unique_listings": len(found),
+           "consensus": sum(1 for t in found.values() if len(t[2]["providers"]) >= 2),
+           "fetched": len(picks), "fetches_saved": raw_hits - len(picks), "kept": len(out)}
+    obs.log_call("telem", "consensus", "hunt", "ok", int((time.perf_counter() - t0) * 1000), len(out), sample=eff)
     emit("source_done", {"platform": "telem", "count": len(out), "status": "ok",
-                         "ms": int((time.perf_counter() - t0) * 1000), "searches": len(asks), "fetched": len(docs)})
+                         "ms": int((time.perf_counter() - t0) * 1000), "searches": len(asks), **eff})
     return out
 
 

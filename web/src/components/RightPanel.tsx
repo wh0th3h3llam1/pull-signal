@@ -28,6 +28,8 @@ function describe(ev: HuntEvent): { tag: string; text: string; tone?: string } {
       return { tag: 'ROUTE', text: `Telem → ${prov.slice(0, 4).join(', ')}${prov.length > 4 ? ` +${prov.length - 4}` : ''} · ${d.results ?? 0} results · ${d.ms ?? '?'}ms`, tone: 'ok' };
     }
     case 'source_done':
+      if (d.platform === 'telem' && d.raw_hits != null)
+        return { tag: 'CONSENSUS', text: `${d.raw_hits} hits → ${d.unique_listings} listings (${d.consensus} by 2+ engines) → fetched ${d.fetched}, ${d.fetches_saved} fetches saved · ${d.ms ?? '?'}ms`, tone: 'ok' };
       return { tag: 'SOURCE', text: `${platformLabel(d.platform)} ${d.count ?? 0} hits · ${d.status ?? ''} · ${d.ms ?? '?'}ms`, tone: String(d.status).startsWith('2') || d.status === 'ok' ? undefined : 'warn' };
     case 'candidate':
       return { tag: 'CAND', text: `${platformLabel(d.platform)} ${short(d.title, 44)}` };

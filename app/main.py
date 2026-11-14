@@ -134,7 +134,13 @@ def stats(recall_id: int | None = None):
     telem = db.q1("""SELECT count(*) AS calls,
               count(*) FILTER (WHERE product='search') AS searches, count(*) FILTER (WHERE product='fetch') AS fetches,
               percentile_cont(0.5) WITHIN GROUP (ORDER BY latency_ms) AS p50_ms
-            FROM rh.api_calls WHERE sponsor='telem'""") or {}
+            FROM rh.api_calls WHERE sponsor='telem' AND product<>'consensus'""") or {}
+    eff = db.q1("""SELECT coalesce(sum((sample->>'raw_hits')::int),0) AS raw_hits,
+              coalesce(sum((sample->>'unique_listings')::int),0) AS unique_listings,
+              coalesce(sum((sample->>'consensus')::int),0) AS consensus,
+              coalesce(sum((sample->>'fetched')::int),0) AS fetched,
+              coalesce(sum((sample->>'fetches_saved')::int),0) AS fetches_saved
+            FROM rh.api_calls WHERE sponsor='telem' AND product='consensus'""") or {}
     telem_prov = db.q("""SELECT p AS provider, count(*) AS n FROM rh.api_calls,
               jsonb_array_elements_text(coalesce(sample->'providers','[]'::jsonb)) p
             WHERE sponsor='telem' AND product='search' GROUP BY 1 ORDER BY 2 DESC""")
@@ -143,7 +149,8 @@ def stats(recall_id: int | None = None):
             FROM rh.listings l LEFT JOIN rh.verdicts v USING (listing_id) WHERE l.raw->>'via' = 'telem'""") or {}
     return {
         "telem": {**{k: (float(v) if v is not None else 0) for k, v in telem.items()}, "providers": telem_prov,
-                  "listings_found": telem_found.get("listings", 0), "flagged": telem_found.get("flagged", 0)},
+                  "listings_found": telem_found.get("listings", 0), "flagged": telem_found.get("flagged", 0),
+                  "efficiency": {k: int(v or 0) for k, v in eff.items()}},
         "recalls": (db.q1("SELECT count(*) AS n FROM rh.recalls") or {}).get("n", 0),
         "listings_scanned": tot.get("scanned", 0), "confirmed": tot.get("confirmed", 0),
         "likely": tot.get("likely", 0), "rejected": tot.get("rejected", 0),

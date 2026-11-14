@@ -73,7 +73,7 @@ async def get_alternatives(recall_id: int, title: str = "") -> dict:
         lines = "\n".join(f"[{i}] {it['title']} | {it['price'] or ''} | {it['shop'] or ''}" for i, it in enumerate(safe))
         prompt = (f"A shopper looked at a recalled product: {rec.get('product_name')} (CPSC recall {rec.get('recall_number')}, "
                   f"hazard: {(rec.get('hazard') or '')[:200]}). They were viewing: {title or 'n/a'}.\n"
-                  f"Pick the 3 best alternative products from this Google Shopping list: same kind of product "
+                  f"Pick the 3 best alternative products from these web search results: same kind of product "
                   f"('{category}'), not an accessory or part, from a different brand than '{rec.get('brand')}', "
                   f"reputable shop preferred. safety_note: only a safety-relevant fact literally present in that "
                   f"listing's title (material, certification, safety feature); otherwise null. Never invent claims.\n\n{lines}")
@@ -94,7 +94,7 @@ async def get_alternatives(recall_id: int, title: str = "") -> dict:
                 picked.append({**safe[i], "safety_note": note[:160]})
             if len(picked) == 3:
                 break
-        if not picked:  # ranking failed: fall back to SERP order, generic note (still real SERP items)
+        if not picked:  # ranking failed: fall back to SERP order, generic note (still real search results)
             picked = [{**it, "safety_note": _generic_note()} for it in safe[:3]]
 
     out = {"category": category, "items": picked, "query": category, "serp_results": len(items),
