@@ -2,3 +2,4 @@ node_modules/
 dist/
 test/out/
 test/screenshots/
+dist-local/
