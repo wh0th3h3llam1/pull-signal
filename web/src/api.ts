@@ -1,4 +1,4 @@
-// HTTP client for the contract in contracts/CONTRACTS.md.
+// HTTP client for the PullSignal API.
 // In DEV only, `?fixture` in the URL swaps in synthetic data from src/dev/fixtures.ts
 // (clearly bannered in the UI). Production builds never include it.
 

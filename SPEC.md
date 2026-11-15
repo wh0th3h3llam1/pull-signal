@@ -1,6 +1,6 @@
-# RECALL HUNTER: Build Spec (2-hour version)
+# PULLSIGNAL: Build Spec (2-hour version)
 
-> Recalled products don't disappear. They get resold. Recall Hunter takes every new federal recall,
+> Recalled products don't disappear. They get resold. PullSignal takes every new federal recall,
 > hunts the marketplaces for listings still selling it, confirms each match with evidence, and keeps
 > re-checking until the listing is gone.
 
@@ -262,7 +262,7 @@ Any live hits → GO. Rock 'n Play is the hero demo: about 100 deaths, illegal t
 | 0:55 | **Triage.** The Gemini funnel runs live: Flash-Lite screens hundreds of listings, Flash compares photos and **draws a box on the model label**, and one uncertain case goes to Pro, which writes its ruling. Counter: "640 screened → 41 vision-checked → 3 escalated → 6 confirmed, $0.0X." |
 | 1:20 | **Evidence + relist catch.** A confirmed listing shows its snapshot in Spaces, the label box, and the pre-filled report. Then the image-vector search finds the **same photo under a different brand name**. |
 | 1:35 | **Accountability.** Tiger scoreboard: "Recalled items stay up a median of X days, by platform." |
-| 1:50 | **Close.** "Every Thursday CPSC publishes about 10 recalls. Recall Hunter is hunting them within minutes." |
+| 1:50 | **Close.** "Every Thursday CPSC publishes about 10 recalls. PullSignal is hunting them within minutes." |
 
 **Real vs. seeded:** all recalls and listings are real and live. The only seeded part is the forked demo snapshot used as a backup, and it's labelled as such.
 

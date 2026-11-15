@@ -9,7 +9,7 @@
 | **Trust & Safety console** (`web/`) | Marketplaces, brands, regulators (B2B) | Pick a CPSC recall and press HUNT. PullSignal finds live listings, verifies them, opens a case per listing, drafts a takedown notice for a human to send, and re-checks that the listing came down |
 | **PullSignal Guard** (`extension/`) | Shoppers (B2C) | A Chrome/Firefox extension that tags recalled products **while you scroll** Amazon, eBay, Walmart, Target or any schema.org store, and suggests safer alternatives |
 
-Why it matters: about **6%** of consumers act on a recall notice, and CPSC sends takedown requests to resale sites by hand. Sources are in `RECALL_HUNTER_SPEC.md`.
+Why it matters: about **6%** of consumers act on a recall notice, and CPSC sends takedown requests to resale sites by hand. Sources are in `SPEC.md`.
 
 ## How a hunt works
 1. **Plan (text + photo).** Claude (`claude-haiku-5-5`) writes the search strings a reseller would type. Recall words sellers never use ("recalled", "notice") are stripped. In parallel, Gemini looks at the **official recall photo** and writes look-based queries ("pink infant rocking sleeper bassinet") for sellers who don't know the brand.

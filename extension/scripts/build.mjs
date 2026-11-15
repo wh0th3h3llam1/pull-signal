@@ -23,7 +23,6 @@ const HOSTS = [
   '*://*.ebay.com/*',
   '*://*.walmart.com/*',
   '*://*.target.com/*',
-  'https://*.ondigitalocean.app/*',
   'http://localhost:8000/*',
   'http://localhost:8001/*',
   'http://127.0.0.1:8000/*',

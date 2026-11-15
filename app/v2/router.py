@@ -1,4 +1,4 @@
-"""/v2 routes for the PullSignal Guard extension (see contracts/CONTRACTS_V2.md)."""
+"""/v2 routes for the PullSignal Guard extension."""
 import asyncio
 import datetime as dt
 from typing import Optional

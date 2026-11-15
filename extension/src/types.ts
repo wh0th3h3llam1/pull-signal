@@ -1,4 +1,4 @@
-// Shared types for PullSignal Guard. Shapes follow contracts/CONTRACTS_V2.md (/v2/match etc.).
+// Shared types for PullSignal Guard. Shapes match the /v2 API (/v2/match etc.).
 
 export type Status = 'clean' | 'possible' | 'recalled';
 

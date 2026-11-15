@@ -1,4 +1,4 @@
-// Client for the /b2b console API (contracts/CONTRACTS_V2.md). No mocks: failures surface as errors.
+// Client for the /b2b console API. No mocks: failures surface as errors.
 
 export interface PlatformRow {
   platform: string;

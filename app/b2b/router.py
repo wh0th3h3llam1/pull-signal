@@ -382,6 +382,6 @@ def report_csv(platform: str | None = None, status: str | None = None):
         yield buf.getvalue()
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d")
-    name = f"recall-hunter-cases-{platform or 'all'}-{stamp}.csv"
+    name = f"pullsignal-cases-{platform or 'all'}-{stamp}.csv"
     return StreamingResponse(gen(), media_type="text/csv",
                              headers={"Content-Disposition": f'attachment; filename="{name}"'})

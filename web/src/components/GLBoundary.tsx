@@ -7,7 +7,7 @@ export default class GLBoundary extends Component<{ fallback: ReactNode; onError
     return { failed: true };
   }
   componentDidCatch(e: Error) {
-    console.warn('[recall-hunter] 3D disabled:', e?.message);
+    console.warn('[pullsignal] 3D disabled:', e?.message);
     this.props.onError?.(e);
   }
   render() {

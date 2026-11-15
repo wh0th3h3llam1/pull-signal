@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>DOM FIXTURE: Amazon search results (Recall Guard adapter test)</title>
+<title>DOM FIXTURE: Amazon search results (PullSignal Guard adapter test)</title>
 <!--
   DOM FIXTURE FOR ADAPTER TESTING ONLY. Not Amazon, not real listings.
   Mimics the markup of Amazon search result cards (div[data-component-type="s-search-result"][data-asin])
-  so the Recall Guard amazon adapter can be exercised locally. ASINs are fake (B0FIX...).
-  Titles of 3 items are real CPSC-recalled products from the Recall Hunter DB
+  so the PullSignal Guard amazon adapter can be exercised locally. ASINs are fake (B0FIX...).
+  Titles of 3 items are real CPSC-recalled products from the PullSignal DB
   (Bodum Chambord French Press #27055, Magnetopia Magnetic Building Cubes #27076, HAUOMS Eight-drawer Dressers #27068);
   the rest are ordinary products that should come back clean.
 -->
@@ -28,7 +28,7 @@
 </style>
 </head>
 <body>
-<div class="fixture-banner"><b>DOM FIXTURE</b> for Recall Guard adapter testing. Mimics Amazon search-result markup. Not a real store; ASINs are fake.</div>
+<div class="fixture-banner"><b>DOM FIXTURE</b> for PullSignal Guard adapter testing. Mimics Amazon search-result markup. Not a real store; ASINs are fake.</div>
 <div class="s-main-slot s-result-list s-search-results">
   <!-- placeholder row with an empty ASIN: the adapter must skip it -->
   <div data-asin="" data-component-type="s-search-result" class="s-result-item"><h2>Results</h2></div>

@@ -24,7 +24,7 @@ export const SANS = `system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Ar
 /** Creates a host element with an isolated (open) shadow root and a style reset. */
 export function shadowHost(tag: 'div' | 'span', css: string, attr: string): { host: HTMLElement; root: ShadowRoot } {
   const host = document.createElement(tag);
-  host.setAttribute('data-recall-guard', attr);
+  host.setAttribute('data-pullsignal-guard', attr);
   host.style.setProperty('all', 'initial', 'important');
   host.style.setProperty('display', 'block', 'important');
   const root = host.attachShadow({ mode: 'open' });

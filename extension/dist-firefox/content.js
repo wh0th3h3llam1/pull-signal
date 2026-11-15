@@ -327,7 +327,7 @@
   var SANS = `system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
   function shadowHost(tag, css, attr) {
     const host = document.createElement(tag);
-    host.setAttribute("data-recall-guard", attr);
+    host.setAttribute("data-pullsignal-guard", attr);
     host.style.setProperty("all", "initial", "important");
     host.style.setProperty("display", "block", "important");
     const root = host.attachShadow({ mode: "open" });
@@ -598,8 +598,8 @@ letter-spacing:.06em;text-transform:uppercase;padding:8px 10px 8px 12px;border-l
     }
   }
   var forceNext = false;
-  if (!g.__recallGuardLoaded && document.documentElement) {
-    g.__recallGuardLoaded = true;
+  if (!g.__pullSignalGuardLoaded && document.documentElement) {
+    g.__pullSignalGuardLoaded = true;
     ext.storage.onChanged.addListener((changes, area) => {
       if (area === "local" && changes.settings) boot();
     });
@@ -650,7 +650,7 @@ letter-spacing:.06em;text-transform:uppercase;padding:8px 10px 8px 12px;border-l
       if (!s) return;
       s.result = r;
       for (const ref of s.refs) {
-        ref.el.querySelectorAll(':scope [data-recall-guard="badge"]').forEach((n) => n.remove());
+        ref.el.querySelectorAll(':scope [data-pullsignal-guard="badge"]').forEach((n) => n.remove());
         const badge = makeBadge(r);
         if (!badge) continue;
         if (ref.anchor.isConnected && ref.el.contains(ref.anchor)) ref.anchor.parentNode.insertBefore(badge, ref.anchor);
@@ -775,7 +775,7 @@ letter-spacing:.06em;text-transform:uppercase;padding:8px 10px 8px 12px;border-l
       mo = null;
       io = null;
       for (const n of injected) n.remove();
-      document.querySelectorAll('[data-recall-guard="badge"]').forEach((n) => n.remove());
+      document.querySelectorAll('[data-pullsignal-guard="badge"]').forEach((n) => n.remove());
       injected.clear();
       cardState.clear();
       queue = [];
